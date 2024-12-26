@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-secret
+  name: auth-postgres-secret
   labels:
-    app: postgres
+    app: auth-postgres
 data:
   POSTGRES_DB: ps_db
   POSTGRES_USER: ps_user
@@ -12,10 +12,10 @@ data:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgres-volume
+  name: auth-postgres-volume
   labels:
     type: local
-    app: postgres
+    app: auth-postgres
 spec:
   storageClassName: manual
   capacity:
@@ -28,9 +28,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-volume-claim
+  name: auth-postgres-volume-claim
   labels:
-    app: postgres
+    app: auth-postgres
 spec:
   storageClassName: manual
   accessModes:
@@ -42,17 +42,17 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: auth-postgres
 spec:
   # Reduce replicas from 3 to 1 to prevent multiple simultaneous initdb commands
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: auth-postgres
   template:
     metadata:
       labels:
-        app: postgres
+        app: auth-postgres
     spec:
       containers:
         - name: postgres
@@ -62,24 +62,24 @@ spec:
             - containerPort: 5432
           envFrom:
             - configMapRef:
-                name: postgres-secret
+                name: auth-postgres-secret
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgresdata
       volumes:
         - name: postgresdata
           persistentVolumeClaim:
-            claimName: postgres-volume-claim
+            claimName: auth-postgres-volume-claim
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres
+  name: auth-postgres
   labels:
-    app: postgres
+    app: auth-postgres
 spec:
   type: NodePort
   ports:
     - port: 5432
   selector:
-    app: postgres
+    app: auth-postgres

@@ -5,5 +5,11 @@ metadata:
 manifests:
   rawYaml:
     - ./k8s/*.yaml
+build:
+  artifacts:
+    - image: georgiiparla/auth
+      context: ./auth
+      docker:
+        dockerfile: Dockerfile
 deploy:
   kubectl: {}
