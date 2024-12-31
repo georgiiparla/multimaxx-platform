@@ -4,7 +4,12 @@ metadata:
   name: multimaxx-platform
 manifests:
   rawYaml:
-    - ./k8s/*.yaml
+    # Deploy database resources first
+    - ./k8s/db/*.yaml
+    # Deploy service and deployment resources next
+    - ./k8s/services/*.yaml
+    # Deploy ingress resources last
+    - ./k8s/nginx/*.yaml
 build:
   artifacts:
     - image: georgiiparla/auth

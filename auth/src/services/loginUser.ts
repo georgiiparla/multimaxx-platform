@@ -31,7 +31,7 @@ export async function loginUser(
   res.setCookie('access_token', token, {
     path: '/',
     httpOnly: true,
-    secure: true,
+    secure: false,
   })
 
   return { accessToken: token }

@@ -1,8 +1,12 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import { FastifyInstance } from 'fastify'
+import { getUsers } from '../services/getUsers'
 
 export async function root(app: FastifyInstance) {
-  console.log('Registering root routes...')
-  app.get('/api/users', (req: FastifyRequest, reply: FastifyReply) => {
-    reply.send({ message: '/api route hit' })
-  })
+  app.get(
+    '/api/users',
+    {
+      preHandler: [app.authPrehandler],
+    },
+    getUsers,
+  )
 }
