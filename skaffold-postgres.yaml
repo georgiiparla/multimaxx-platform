@@ -1,0 +1,11 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: multimaxx-postgres
+manifests:
+  rawYaml:
+    - ./k8s/db/*.yaml
+build:
+  artifacts: []
+deploy:
+  kubectl: {}
